@@ -24,7 +24,7 @@ _obs: cria a branch a partir da branch atual_
 
 deletar branch:
 ```
-git checkout -b nome-da-branch
+git branch -d nome-da-branch
 ```
 _obs: só é possível deletar a branch estando fora dela_
 
@@ -68,7 +68,7 @@ _obs: quando terminou sua atividade e quer mandar para a master_
 
 ---
 
-dar merge da master na 
+dar merge da master na branch da atividade 
 ```
 git checkout sua-branch
 git merge master
