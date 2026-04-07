@@ -3,10 +3,13 @@
 
 #include <stdint.h>
 
+// como trabalhar com o grau maximo aqui?
+
 union ou struct nodo {
   //defina
 };
 
+// preciso mexer aqui?
 struct arvoreB {
   union ou struct nodo* raiz;
   int32_t t_arvore;
