@@ -5,7 +5,6 @@
 #include "arvoreB.h"
 #include "util.h"
 
-
 // aloca uma struct do tipo arvoreB com um valor t específico e retorna.
 struct arvoreB* criarArvoreB(int32_t t_arvore) {
   struct arvoreB* T = malloc(sizeof(struct arvoreB));
