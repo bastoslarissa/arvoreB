@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-// como trabalhar com o grau maximo aqui?
 struct nodo {
   int32_t n; // número de chaves atualmente armazenadas
   int32_t *chaves;

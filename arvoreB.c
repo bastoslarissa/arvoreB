@@ -15,24 +15,24 @@ void encerraProgFaltaMemoria() {
 // reserva memória para o nodo, retorna erro e encerra o programa caso falte memória.
 struct nodo* alocarNodo(int32_t t_arvore) {
   struct nodo* novoNodo = malloc(sizeof(struct nodo));
-  if(novoNodo == NULL) {
+  if (novoNodo == NULL) {
     encerraProgFaltaMemoria();
   }
 
   // aloca o vetor de chaves conforme a regra de árvores B
   novoNodo->chaves = malloc((2 * t_arvore -1) * sizeof(int32_t));
-  if(novoNodo->chaves == NULL){
+  if (novoNodo->chaves == NULL){
     encerraProgFaltaMemoria();
   }
 
   // aloca vetor de ponteiros para os filhos seguindo as regras de árvore B
   novoNodo->filhos = malloc((2 * t_arvore) * sizeof(struct nodo));
-  if(novoNodo->filhos == NULL) {
+  if (novoNodo->filhos == NULL) {
     encerraProgFaltaMemoria();
   }
 
   //fazer todos os ponteiros apontarem para NULL para evitar segfault
-  for(int i = 0; i < (2 * t_arvore); i++) {
+  for (int i = 0; i < (2 * t_arvore); i++) {
     novoNodo->filhos[i] = NULL;
   }
 
@@ -46,7 +46,7 @@ struct nodo* alocarNodo(int32_t t_arvore) {
 // aloca uma struct do tipo arvoreB com um valor t específico e retorna.
 struct arvoreB* criarArvoreB(int32_t t_arvore) {
   struct arvoreB* T = malloc(sizeof(struct arvoreB));
-  if(T == NULL) {
+  if (T == NULL) {
     encerraProgFaltaMemoria();
   }
 
@@ -59,13 +59,34 @@ struct arvoreB* criarArvoreB(int32_t t_arvore) {
 
 // imprime a árvore B na tela em largura.
 void imprimirArvoreB(struct arvoreB* arvore) {
+
   
 }
 
 // retorna o endereço do nodo que contém a chave buscada, caso contrário retorna NULL.
 // índice de onde a chave se encontra é inserido em idxEncontrado.
-struct nodo* buscarArvoreB(struct arvoreB* arvore, int32_t chave,
-                          int32_t* idxEncontrado) {
+struct nodo* buscarArvoreB(struct arvoreB* arvore, int32_t chave, int32_t* idxEncontrado) {
+  // comeca na raiz
+  struct nodo* x = arvore->raiz;
 
+  while (x != NULL) {
+    int i = 0;
+    //int32_t k = chave;
 
+    // percorre o nodo
+    while ((i < x->n) && (chave > x->chaves[i])) {
+      i++;
+    }
+    // se achou a chave
+    if ((i < x->n) && (chave == x->chaves[i])) {
+      *idxEncontrado = i;
+      return x; 
+    } else if (x->ehFolha) { // se não achou e é folha
+      break;
+    }
+    x = x->filhos[i];
+  }
+  // não achou
+  *idxEncontrado = -1;
+  return NULL;
 }
