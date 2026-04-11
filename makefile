@@ -1,4 +1,4 @@
-GRR= 20231947
+GRR= 20231947_2023
 nomePrograma= prova1_$(GRR)
 
 # flags de compilação
@@ -8,16 +8,20 @@ CC = gcc
 
 all: $(nomePrograma)
 
-$(nomePrograma): main.o arvoreB.o
-	$(CC) -o $(nomePrograma) main.o arvoreB.o $(CFLAGS)
+$(nomePrograma): main.o arvoreB.o util.o
+	$(CC) -o $(nomePrograma) main.o arvoreB.o util.o $(CFLAGS)
 
 # compilação da main
 main.o: main.c arvoreB.h
 	$(CC) -c $(CFLAGS) main.c
 
 # compilação da árvore B
-arvoreB.o: arvoreB.c arvoreB.h
+arvoreB.o: arvoreB.c arvoreB.h util.h
 	$(CC) -c $(CFLAGS) arvoreB.c
+
+#compilação de útil
+util.o: util.c util.h arvoreB.h
+	$(CC) -c $(CFLAGS) util.c
 
 clean:
 	rm -f *.o *~ $(nomePrograma)
