@@ -32,6 +32,9 @@ struct nodo* alocarNodo(int32_t t_arvore) {
   }
 
   //fazer todos os ponteiros apontarem para NULL para evitar segfault
+  for(int i = 0; i < (2 * t_arvore); i++) {
+    novoNodo->filhos[i] = NULL;
+  }
 
   //inicializa campos do novo nodo
   novoNodo->ehFolha = true;
@@ -40,12 +43,18 @@ struct nodo* alocarNodo(int32_t t_arvore) {
   return novoNodo;
 }
 
-
-// aloca uma struct do tipo arvoreB com um valor T específico e retorna.
+// aloca uma struct do tipo arvoreB com um valor t específico e retorna.
 struct arvoreB* criarArvoreB(int32_t t_arvore) {
+  struct arvoreB* T = malloc(sizeof(struct arvoreB));
+  if(T == NULL) {
+    encerraProgFaltaMemoria();
+  }
 
+  struct nodo* x = alocarNodo(t_arvore);
+  T->raiz = x;
+  T->t_arvore = t_arvore;
 
-
+  return T;
 }
 
 // imprime a árvore B na tela em largura.
