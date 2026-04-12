@@ -54,7 +54,7 @@ void imprimirArvoreB(struct arvoreB* arvore) {
       if (i < (nodosNivel - 1)) {
         printf(" ");
       }
-
+      // se for interno enfilera filhos
       if (!atual->ehFolha) {
         for (int j = 0; j <= atual->n; j++) {
           enfileirar(f, atual->filhos[j]);
