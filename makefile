@@ -19,7 +19,7 @@ main.o: main.c arvoreB.h
 arvoreB.o: arvoreB.c arvoreB.h util.h
 	$(CC) -c $(CFLAGS) arvoreB.c
 
-#compilação de útil
+# compilação de útil
 util.o: util.c util.h arvoreB.h
 	$(CC) -c $(CFLAGS) util.c
 
