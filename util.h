@@ -12,8 +12,8 @@ struct filaNodo {
 
 // estrutura controle da fila
 struct fila {
-    struct fila* inicio;
-    struct fila* fim;
+    struct filaNodo* inicio;
+    struct filaNodo* fim;
 };
 
 // funções úteis

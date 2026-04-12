@@ -27,7 +27,7 @@ struct nodo* alocarNodo(int32_t t_arvore) {
   }
 
   // aloca vetor de ponteiros para os filhos seguindo as regras de árvore B
-  novoNodo->filhos = malloc((2 * t_arvore) * sizeof(struct nodo));
+  novoNodo->filhos = malloc((2 * t_arvore) * sizeof(struct nodo*));
   if (!novoNodo->filhos) {
     encerraProgFaltaMemoria();
   }
@@ -89,8 +89,20 @@ void enfileirar(struct fila* f, struct nodo* n) {
 //TERMINAR
 struct nodo* desenfileirar(struct fila* f) {
   if(!f || !f->inicio)
-    return;
-}
+    return NULL;
+  
+  struct filaNodo * itemRemove = f->inicio;
+  struct nodo* n = itemRemove->nodoT;
+
+  //atualiza o novo primeiro item da fila pos desenfileirar
+  f->inicio = itemRemove->prox;
+  if(f->inicio == NULL)
+    f->fim = NULL;
+
+  free(itemRemove); // libera apenas o elemento da fila 
+  return n;
+
+} 
 
 // função de auxílio para caso de fila vazia
 int32_t filaVazia(struct fila* f) {
