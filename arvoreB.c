@@ -19,6 +19,20 @@ struct arvoreB* criarArvoreB(int32_t t_arvore) {
   return T;
 }
 
+// insere um novo elemento na árvore
+void inserirArvoreB(struct arvoreB* arvore, int32_t chave) {
+  struct nodo* r = arvore->raiz;
+
+  if (r->n == (2*(arvore->t_arvore)-1)) {
+    struct nodo* s = dividirRaiz(arvore);
+    inserirNaoCheio(s, chave, arvore->t_arvore);
+  }
+  else {
+    inserirNaoCheio(r, chave, arvore->t_arvore);
+  }
+
+}
+
 // imprime a árvore B na tela em largura.
 void imprimirArvoreB(struct arvoreB* arvore) {
   if(!arvore->raiz) {

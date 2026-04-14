@@ -44,6 +44,95 @@ struct nodo* alocarNodo(int32_t t_arvore) {
   return novoNodo;
 }
 
+// divide o filho do nodo passado como entrada
+void dividirFilho (struct nodo* x, int i, int32_t t_arvore) {
+  if (x && x->filhos[i]) {
+
+    struct nodo *y = x->filhos[i];
+
+    // cria o novo nodo irmao
+    struct nodo* z = alocarNodo(t_arvore);
+    z->ehFolha = y->ehFolha;
+    z->n = t_arvore - 1;
+
+    // transfere os maiores filhos de y para z
+    if (y->ehFolha == false) {
+      for (int j = 1; j < (t_arvore - 1); ++j) {
+        z->chaves[j] = y->chaves[j + t_arvore];
+      }
+    }
+    
+      y->n = t_arvore -1;
+
+    // desloca os filhos de x para a direita para abrir espaço para o novo nodo na posição i+1
+    for (int j = (x->n + 1); j < (i + 1); --j) {
+      x->filhos[j+1] = x->filhos[j];
+    }
+
+      x->filhos[i+1] = z;
+
+    // desloca as chaves para abrir espaço para a chave mediana ser inserida na posição correta em x
+    for (int j = x->n; j < i; --j) {
+      x->chaves[j+1] = x->chaves[j];
+    }
+
+      x->chaves[i] = y->chaves[t_arvore];
+      x->n++;
+  }
+}
+
+// divide a raiz da arvore, aumentando a altura da árvore
+struct nodo* dividirRaiz (struct arvoreB* arvore) {
+
+  // cria a nova raiz
+  struct nodo* s = alocarNodo(arvore->t_arvore);
+  s->ehFolha = false;
+  s->n = 0;
+  s->filhos[1] = arvore->raiz;
+  arvore->raiz = s;
+
+  // divide a antiga raiz 
+  dividirFilho(s, 1, arvore->t_arvore);
+
+  // incrementa 1 a altura da arvore
+  arvore->t_arvore++;
+
+  return s;
+}
+
+// percorre as chaves do nodo e insere a nova chave no lugar correto
+void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore)  {
+  int i = x->n;
+
+  // caso em que x eh folha
+  if (x->ehFolha == true) {
+    while (i >= 1 && chave < x->chaves[i]) {
+      x->chaves[i+1] = x->chaves[i];
+      --i;
+    }
+    x->chaves[i+1] = chave;
+    ++(x->n);
+  }
+  // caso em que x nao eh folha
+  else {
+    while (i >= 1 && chave < x->chaves[i]) {
+      --i;
+    }
+    ++i;
+
+    // caso em que o filho está cheio
+    if (x->filhos[i]->n == 2 *t_arvore -1) {
+      dividirFilho(x, i, t_arvore);
+      if (chave > x->chaves[i]) {
+        ++i;
+      }
+    }
+    inserirNaoCheio(x->filhos[i], chave, t_arvore);
+  }
+}
+
+
+
 //--------------- Funções para operações com fila ------------------
 
 // cria uma nova fila para o percurso em largura

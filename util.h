@@ -19,6 +19,9 @@ struct fila {
 // funções úteis
 void encerraProgFaltaMemoria();
 struct nodo* alocarNodo(int32_t t_arvore);
+void dividirFilho (struct nodo* x, int i, int32_t t_arvore);
+struct nodo* dividirRaiz (struct arvoreB* arvore);
+void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore);
 
 //funções da fila
 struct fila* criaFila();
