@@ -32,7 +32,7 @@ struct nodo* alocarNodo(int32_t t_arvore) {
     encerraProgFaltaMemoria();
   }
 
-  //fazer todos os ponteiros apontarem para NULL para evitar segfault
+  //faz todos os ponteiros apontarem para NULL para evitar segfault
   for (int i = 0; i < (2 * t_arvore); i++) {
     novoNodo->filhos[i] = NULL;
   }
@@ -59,7 +59,7 @@ void dividirFilho (struct nodo* x, int i, int32_t t_arvore) {
 
 
      // tranfere as chaves de y para z
-    for (int j = 0; j <= t_arvore - 1; ++j) {
+    for (int j = 0; j < t_arvore - 1; ++j) {
       z->chaves[j] = y->chaves[j+t_arvore];
     } 
 
@@ -140,6 +140,7 @@ void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore)  {
   }
 }
 
+// percorre a árvore imprimindo as chaves em ordem recursivamente
 void imprimeNodo (struct nodo* x) {
   if (x == NULL) 
     return;
@@ -153,6 +154,24 @@ void imprimeNodo (struct nodo* x) {
   if (x->ehFolha == false) {
     imprimeNodo(x->filhos[x->n]);
   }
+}
+
+// libera os nodos da arvore
+void liberarArvoreB (struct nodo* x) {
+  if (!x)
+    return;
+
+  // caso em que o nodo é interno
+  if (x->ehFolha == false) {
+    for (int i = 0; i<= x->n; i++) {
+      liberarArvoreB(x->filhos[i]);
+    }
+  }
+  free(x->chaves);
+  if (x->filhos) {
+    free(x->filhos);
+  }
+  free(x);
 }
 
 //--------------- Funções para operações com fila ------------------
@@ -197,7 +216,6 @@ void enfileirar(struct fila* f, struct nodo* n) {
 }
 
 // retira o primeiro item da fila e o devolve
-//TERMINAR
 struct nodo* desenfileirar(struct fila* f) {
   if(!f || !f->inicio)
     return NULL;

@@ -121,3 +121,8 @@ struct nodo* buscarArvoreB(struct arvoreB* arvore, int32_t chave, int32_t* idxEn
   *idxEncontrado = -1;
   return NULL;
 }
+
+void deletarArvore(struct arvoreB* arvore) {
+  liberarArvoreB(arvore->raiz);
+  free(arvore);
+}
