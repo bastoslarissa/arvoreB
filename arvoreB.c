@@ -82,6 +82,18 @@ void imprimirArvoreB(struct arvoreB* arvore) {
   destroiFila(f);
 }
 
+// imprime a arvore B na tela em ordem
+void imprimirEmOrdem(struct arvoreB* arvore) {
+  if (arvore == NULL || arvore->raiz == NULL) {
+    printf("Árvore vazia\n");
+    return;
+  }
+
+  imprimeNodo(arvore->raiz);
+  printf("\n");
+}
+
+
 // retorna o endereço do nodo que contém a chave buscada, caso contrário retorna NULL.
 // índice de onde a chave se encontra é inserido em idxEncontrado.
 struct nodo* buscarArvoreB(struct arvoreB* arvore, int32_t chave, int32_t* idxEncontrado) {
