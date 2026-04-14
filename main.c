@@ -42,5 +42,7 @@ int main () {
     }
   }
 
-  return 0;
+  deletarArvore(arvore);
+
+  return 0;   
 }

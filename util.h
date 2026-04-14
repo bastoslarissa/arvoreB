@@ -23,6 +23,7 @@ void dividirFilho (struct nodo* x, int i, int32_t t_arvore);
 struct nodo* dividirRaiz (struct arvoreB* arvore);
 void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore);
 void imprimeNodo (struct nodo* x);
+void liberarArvoreB (struct nodo* x);
 
 //funções da fila
 struct fila* criaFila();
