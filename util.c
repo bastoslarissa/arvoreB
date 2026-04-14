@@ -27,7 +27,7 @@ struct nodo* alocarNodo(int32_t t_arvore) {
   }
 
   // aloca vetor de ponteiros para os filhos seguindo as regras de árvore B
-  novoNodo->filhos = malloc((2 * t_arvore) * sizeof(struct nodo));
+  novoNodo->filhos = malloc((2 * t_arvore) * sizeof(struct nodo*));
   if (!novoNodo->filhos) {
     encerraProgFaltaMemoria();
   }
@@ -46,8 +46,6 @@ struct nodo* alocarNodo(int32_t t_arvore) {
 
 // divide o filho do nodo passado como entrada
 void dividirFilho (struct nodo* x, int i, int32_t t_arvore) {
-  if (x && x->filhos[i]) {
-
     struct nodo *y = x->filhos[i];
 
     // cria o novo nodo irmao
@@ -55,31 +53,42 @@ void dividirFilho (struct nodo* x, int i, int32_t t_arvore) {
     z->ehFolha = y->ehFolha;
     z->n = t_arvore - 1;
 
+    for (int j = 0; j < 2*t_arvore - 1; j++) {
+      z->chaves[j] = 0;
+    }
+
+
+     // tranfere as chaves de y para z
+    for (int j = 0; j <= t_arvore - 1; ++j) {
+      z->chaves[j] = y->chaves[j+t_arvore];
+    } 
+
     // transfere os maiores filhos de y para z
     if (y->ehFolha == false) {
-      for (int j = 1; j < (t_arvore - 1); ++j) {
-        z->chaves[j] = y->chaves[j + t_arvore];
+      for (int j = 0; j < t_arvore; ++j) {
+        z->filhos[j] = y->filhos[j + t_arvore];
       }
     }
     
       y->n = t_arvore -1;
 
     // desloca os filhos de x para a direita para abrir espaço para o novo nodo na posição i+1
-    for (int j = (x->n + 1); j < (i + 1); --j) {
-      x->filhos[j+1] = x->filhos[j];
-    }
+    for (int j = x->n; j >= i+1; --j) {
+        x->filhos[j+1] = x->filhos[j];
+      }
 
       x->filhos[i+1] = z;
 
     // desloca as chaves para abrir espaço para a chave mediana ser inserida na posição correta em x
-    for (int j = x->n; j < i; --j) {
+    for (int j = x->n - 1; j >= i; --j) {
       x->chaves[j+1] = x->chaves[j];
     }
 
-      x->chaves[i] = y->chaves[t_arvore];
+      //x->chaves[i] = y->chaves[t_arvore];
+     x->chaves[i] = y->chaves[t_arvore - 1];
       x->n++;
   }
-}
+
 
 // divide a raiz da arvore, aumentando a altura da árvore
 struct nodo* dividirRaiz (struct arvoreB* arvore) {
@@ -88,11 +97,11 @@ struct nodo* dividirRaiz (struct arvoreB* arvore) {
   struct nodo* s = alocarNodo(arvore->t_arvore);
   s->ehFolha = false;
   s->n = 0;
-  s->filhos[1] = arvore->raiz;
+  s->filhos[0] = arvore->raiz;
   arvore->raiz = s;
 
   // divide a antiga raiz 
-  dividirFilho(s, 1, arvore->t_arvore);
+  dividirFilho(s, 0, arvore->t_arvore);
 
   // incrementa 1 a altura da arvore
   arvore->t_arvore++;
@@ -102,11 +111,11 @@ struct nodo* dividirRaiz (struct arvoreB* arvore) {
 
 // percorre as chaves do nodo e insere a nova chave no lugar correto
 void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore)  {
-  int i = x->n;
+  int i = x->n - 1;
 
   // caso em que x eh folha
   if (x->ehFolha == true) {
-    while (i >= 1 && chave < x->chaves[i]) {
+    while (i >= 0 && chave < x->chaves[i]) {
       x->chaves[i+1] = x->chaves[i];
       --i;
     }
@@ -115,13 +124,13 @@ void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore)  {
   }
   // caso em que x nao eh folha
   else {
-    while (i >= 1 && chave < x->chaves[i]) {
+    while (i >= 0 && chave < x->chaves[i]) {
       --i;
     }
     ++i;
 
     // caso em que o filho está cheio
-    if (x->filhos[i]->n == 2 *t_arvore -1) {
+    if (x->filhos[i]!= NULL && x->filhos[i]->n == 2 *t_arvore -1) {
       dividirFilho(x, i, t_arvore);
       if (chave > x->chaves[i]) {
         ++i;
@@ -131,7 +140,20 @@ void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore)  {
   }
 }
 
+void imprimeNodo (struct nodo* x) {
+  if (x == NULL) 
+    return;
 
+  for (int i = 0; i < x->n; i++) {
+    if(x->ehFolha == false) {
+      imprimeNodo(x->filhos[i]);
+    }
+    printf("%d ", x->chaves[i]);
+  }
+  if (x->ehFolha == false) {
+    imprimeNodo(x->filhos[x->n]);
+  }
+}
 
 //--------------- Funções para operações com fila ------------------
 
@@ -178,7 +200,18 @@ void enfileirar(struct fila* f, struct nodo* n) {
 //TERMINAR
 struct nodo* desenfileirar(struct fila* f) {
   if(!f || !f->inicio)
-    return;
+    return NULL;
+  
+  struct filaNodo * itemRemove = f->inicio;
+  struct nodo* n = itemRemove->nodoT;
+
+  //atualiza o novo primeiro item da fila pos desenfileirar
+  f->inicio = itemRemove->prox;
+  if(f->inicio == NULL)
+    f->fim = NULL;
+
+  free(itemRemove); // libera apenas o elemento da fila 
+  return n;
 }
 
 int32_t filaVazia(struct fila* f) {
