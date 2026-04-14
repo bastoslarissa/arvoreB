@@ -214,10 +214,12 @@ struct nodo* desenfileirar(struct fila* f) {
   return n;
 }
 
+// função de auxílio para caso de fila vazia
 int32_t filaVazia(struct fila* f) {
     return (f->inicio == NULL);
 }
 
+//destroi a fila e libera memoria
 void destroiFila(struct fila* f) {
     while (!filaVazia(f))
         desenfileirar(f);
