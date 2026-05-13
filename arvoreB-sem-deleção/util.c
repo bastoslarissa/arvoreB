@@ -103,9 +103,6 @@ struct nodo* dividirRaiz (struct arvoreB* arvore) {
   // divide a antiga raiz 
   dividirFilho(s, 0, arvore->t_arvore);
 
-  // incrementa 1 a altura da arvore
-  arvore->t_arvore++;
-
   return s;
 }
 
