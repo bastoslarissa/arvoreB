@@ -32,6 +32,31 @@ void inserirArvoreB(struct arvoreB* arvore, int32_t chave) {
   }
 
 }
+//remove uma chave, se foi removida, retorna verdadeiro. Caso contrário, retorna falso
+//caso 1 é tratado dentro dessa função (caso o nodo excluido esta em uma folha)
+bool removerChaveArvoreB(struct arvoreB* arvore, int32_t chave) {
+  // comeca na raiz 
+  struct nodo* x = arvore->raiz;
+
+  int32_t i = 0;
+  // percorre o nodo
+  while ((i < x->n) && (chave > x->chaves[i])) {
+    i++;
+  }
+  // se achou a chave
+  if ((i < x->n) && (chave == x->chaves[i])){
+    if(x->ehFolha) { //se for uma folha só exclui
+      removeFolha(x,i);
+      return true;
+    }
+
+  //se não achou e é folha
+  } else {
+    if (x->ehFolha)
+      return false;
+  }
+  return removerChaveArvoreB(arvore, chave);
+}
 
 // imprime a árvore B na tela em largura.
 void imprimirArvoreB(struct arvoreB* arvore) {

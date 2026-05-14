@@ -6,7 +6,15 @@
 #include "util.h"
 
 //---------------------- Funções auxiliares (implementação da deleção) -------------------------
+void removeFolha(struct nodo* x, int i) {
+  //descola as chaves uma posição para a esquerda
+  for(int j = i + 1; j < x->n; j++) {
+    x->chaves[j - 1] = x->chaves[j];
+  }
 
+  //diminui a contagem de chaves no nodo
+  x->n--;
+}
 
 
 
