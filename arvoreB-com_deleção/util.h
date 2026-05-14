@@ -25,6 +25,9 @@ void inserirNaoCheio (struct nodo* x, int32_t chave, int32_t t_arvore);
 void imprimeNodo (struct nodo* x);
 void liberarArvoreB (struct nodo* x);
 
+//funções deleção
+
+
 //funções da fila
 struct fila* criaFila();
 void enfileirar(struct fila* f, struct nodo* n);

@@ -1,2 +1,5 @@
 Giovanna Joecy Sona de Oliveira GRR20231947
 Larissa de Souza Bastos GRR20235088
+
+Conseguimos consertar o erro do trabalho anterior, estavámos incrementando o grau da arvore na função divide raiz, por isso os erros de ponteiro e corrupção de memória.
+
