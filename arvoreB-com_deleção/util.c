@@ -5,7 +5,26 @@
 #include "arvoreB.h"
 #include "util.h"
 
-//---------------------- Funções auxiliares -------------------------
+//---------------------- Funções auxiliares (implementação da deleção) -------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------- Funções auxiliares (primeira parte do trabalho) -------------------------
 
 // término do programa em caso de falta de memória.
 void encerraProgFaltaMemoria() {
@@ -46,47 +65,46 @@ struct nodo* alocarNodo(int32_t t_arvore) {
 
 // divide o filho do nodo passado como entrada
 void dividirFilho (struct nodo* x, int i, int32_t t_arvore) {
-    struct nodo *y = x->filhos[i];
+  struct nodo *y = x->filhos[i];
 
-    // cria o novo nodo irmao
-    struct nodo* z = alocarNodo(t_arvore);
-    z->ehFolha = y->ehFolha;
-    z->n = t_arvore - 1;
+  // cria o novo nodo irmao
+  struct nodo* z = alocarNodo(t_arvore);
+  z->ehFolha = y->ehFolha;
+  z->n = t_arvore - 1;
 
-    for (int j = 0; j < 2*t_arvore - 1; j++) {
-      z->chaves[j] = 0;
+  for (int j = 0; j < 2*t_arvore - 1; j++) {
+    z->chaves[j] = 0;
+  }
+
+  // transfere as chaves de y para z
+  for (int j = 0; j < t_arvore - 1; ++j) {
+    z->chaves[j] = y->chaves[j+t_arvore];
+  } 
+
+  // transfere os maiores filhos de y para z
+  if (y->ehFolha == false) {
+    for (int j = 0; j < t_arvore; ++j) {
+      z->filhos[j] = y->filhos[j + t_arvore];
     }
-
-
-     // tranfere as chaves de y para z
-    for (int j = 0; j < t_arvore - 1; ++j) {
-      z->chaves[j] = y->chaves[j+t_arvore];
-    } 
-
-    // transfere os maiores filhos de y para z
-    if (y->ehFolha == false) {
-      for (int j = 0; j < t_arvore; ++j) {
-        z->filhos[j] = y->filhos[j + t_arvore];
-      }
-    }
+  }
     
-      y->n = t_arvore -1;
+  y->n = t_arvore -1;
 
-    // desloca os filhos de x para a direita para abrir espaço para o novo nodo na posição i+1
-    for (int j = x->n; j >= i+1; --j) {
-        x->filhos[j+1] = x->filhos[j];
-      }
+  // desloca os filhos de x para a direita para abrir espaço para o novo nodo na posição i+1
+  for (int j = x->n; j >= i+1; --j) {
+    x->filhos[j+1] = x->filhos[j];
+  }
 
-      x->filhos[i+1] = z;
+  x->filhos[i+1] = z;
 
-    // desloca as chaves para abrir espaço para a chave mediana ser inserida na posição correta em x
-    for (int j = x->n - 1; j >= i; --j) {
-      x->chaves[j+1] = x->chaves[j];
-    }
+  // desloca as chaves para abrir espaço para a chave mediana ser inserida na posição correta em x
+  for (int j = x->n - 1; j >= i; --j) {
+    x->chaves[j+1] = x->chaves[j];
+  }
 
-      //x->chaves[i] = y->chaves[t_arvore];
-     x->chaves[i] = y->chaves[t_arvore - 1];
-      x->n++;
+  //x->chaves[i] = y->chaves[t_arvore];
+  x->chaves[i] = y->chaves[t_arvore - 1];
+  x->n++;
   }
 
 
