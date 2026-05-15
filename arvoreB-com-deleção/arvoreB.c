@@ -48,7 +48,7 @@ bool removerChaveArvoreB(struct arvoreB* arvore, int32_t chave) {
     if(x->ehFolha) { //se for uma folha só exclui
       removeFolha(x,i);
       return true;
-    }
+    } //adicionar os outros casos aqui 
 
   //se não achou e é folha
   } else {

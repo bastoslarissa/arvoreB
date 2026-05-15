@@ -6,8 +6,10 @@
 #include "util.h"
 
 //---------------------- Funções auxiliares (implementação da deleção) -------------------------
+
+// subfunção para remover a chave de um nodo folha
 void removeFolha(struct nodo* x, int i) {
-  //descola as chaves uma posição para a esquerda
+  // desloca as chaves uma posição para a esquerda
   for(int j = i + 1; j < x->n; j++) {
     x->chaves[j - 1] = x->chaves[j];
   }
@@ -16,20 +18,38 @@ void removeFolha(struct nodo* x, int i) {
   x->n--;
 }
 
+// encontra o predecessor da chave K 
+int32_t encontraPred(struct nodo* x, int i) {
+  //filho a esquerda da chave
+  struct nodo* atual = x->filhos[i];
 
+  //desce até a folha mais a direita
+  while(!atual->ehFolha) {
+    atual = atual->filhos[atual->n]; //o ultimo ponteiro aponta para os maiores valores do nodo
+  }
 
+  //predecessor é a ultima chave da folha
+  return atual->chaves[atual->n - 1];
+}
 
+// encontra o sucessor da chave K 
+int32_t encontraSuc(struct nodo* x, int i) {
+  //filho a direita da chave
+  struct nodo* atual = x->filhos[i + 1];
 
+  //desce até a folha mais a esquerda da árvore
+  while(!atual->ehFolha) {
+    atual = atual->filhos[0]; //o primeiro ponteiro de filho aponta para os menores valores
+  }
 
+  // O sucessor é a primeira chave da folha
+  return atual->chaves[0];
+}
 
+//ajusta raiz no caso dela ficar vaiza
+void ajustaRaiz() {
 
-
-
-
-
-
-
-
+}
 
 
 //---------------------- Funções auxiliares (primeira parte do trabalho) -------------------------
