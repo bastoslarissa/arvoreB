@@ -2,7 +2,6 @@ GRR= 20231947_20235088
 nomePrograma= prova1_$(GRR)
 
 # flags de compilação
-# -Wpedantic é para garantir o padrão c23, podemos remover depois
 CFLAGS = -Wall -Wextra -Werror -g -std=c23 -Wpedantic
 CC = gcc-14
 
