@@ -46,8 +46,25 @@ int32_t encontraSuc(struct nodo* x, int i) {
   return atual->chaves[0];
 }
 
-//ajusta raiz no caso dela ficar vaiza
-void ajustaRaiz() {
+// ajusta raiz no caso dela ficar vaiza
+void ajustaRaiz(struct arvoreB* arvore) {
+  // caso base
+  if (arvore == NULL || arvore->raiz == NULL) {
+    return;
+  }
+
+  // se a raiz ficar vazia e tiver filhos
+  if (arvore->raiz->n == 0 && !arvore->raiz->ehFolha) {
+    struct nodo* antigaRaiz = arvore->raiz; //nao perder o ponteiro
+
+    //primeiro filho vira a nova raiz
+    arvore->raiz = antigaRaiz->filhos[0];
+
+    //libera memoria
+    free(antigaRaiz->chaves);
+    free(antigaRaiz->filhos);
+    free(antigaRaiz);
+  }
 
 }
 
