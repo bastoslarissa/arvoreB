@@ -54,17 +54,19 @@ bool removerChaveArvoreB(struct arvoreB* arvore, int32_t chave) {
       //filho a esquerda
       int32_t t = arvore->t_arvore;
       if (x->filhos[i]->n >= t) {
-        int32_t pred = encontraPred(x->filhos[i]);
-        x->chaves[i] = pred;
+        struct nodo* pred = encontraPred(x, i);
+        int32_t pred_chave = pred->chaves[pred->n - 1]; //n -1 lembrar que c começa em zero!
+        x->chaves[i] = pred_chave;
 
-        return removerChaveArvoreB(arvore, pred);
+        return removerChaveArvoreB(arvore, pred_chave);
       }
       //filho a direita
       else if (x->filhos[i + 1]->n >= t ) {
-        int32_t suc = encontraSuc(x->filhos[i + 1]);
-        x->chaves[i] = suc;
+        struct nodo* suc = encontraSuc(x,i);
+        int32_t suc_chave = suc->chaves[0]; 
+        x->chaves[i] = suc_chave;
 
-        return removerChaveArvoreB(arvore, suc);
+        return removerChaveArvoreB(arvore, suc_chave);
       }
 
     }//terceiro caso 
