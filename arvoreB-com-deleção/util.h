@@ -26,8 +26,8 @@ void imprimeNodo (struct nodo* x);
 void liberarArvoreB (struct nodo* x);
 
 //funções deleção
-struct nodo* buscaPredecessor(struct nodo* x);
-struct nodo* buscaSucessor(struct nodo* x);
+struct nodo* encontraPred(struct nodo* x, int i);
+struct nodo* encontraSuc(struct nodo* x, int i);
 void removeFolha(struct nodo* x, int i);
 void ajustaRaiz(struct arvoreB* arvore);
 void removeChaveNodo(struct nodo *x, int32_t chave);

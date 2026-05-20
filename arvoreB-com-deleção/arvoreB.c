@@ -139,10 +139,30 @@ bool removerChaveArvoreB(struct arvoreB* arvore, struct nodo *x, int32_t chave) 
   }
   // se achou a chave
   if ((i < x->n) && (chave == x->chaves[i])){
-    if(x->ehFolha) { //se for uma folha só exclui
+    if (x->ehFolha) { //se for uma folha só exclui
       removeFolha(x,i);
       return true;
-    }  
+    } 
+    
+     //caso 2: chave no nodo interno
+    else {
+      //filho a esquerda
+      int32_t t = arvore->t_arvore;
+      if (x->filhos[i]->n >= t) {
+        struct nodo* pred = encontraPred(x, i);
+        int32_t pred_chave = pred->chaves[pred->n - 1]; //n -1 lembrar que c começa em zero!
+        x->chaves[i] = pred_chave;
+
+        return removerChaveArvoreB(arvore, pred_chave);
+      }
+      //filho a direita
+      else if (x->filhos[i + 1]->n >= t ) {
+        struct nodo* suc = encontraSuc(x,i);
+        int32_t suc_chave = suc->chaves[0]; 
+        x->chaves[i] = suc_chave;
+
+        return removerChaveArvoreB(arvore, suc_chave);
+      }
 
     // se ambas as subarvores tem a quantidade minima de chaves 
     else if (x->filhos[i]->n == arvore->t_arvore - 1 && x->filhos[i+1]->n == arvore->t_arvore - 1){
@@ -162,7 +182,9 @@ bool removerChaveArvoreB(struct arvoreB* arvore, struct nodo *x, int32_t chave) 
 
       return true;
     }
-
+   } 
+   
+    }//terceiro caso 
   //se não achou e é folha
   } else {
     if (x->ehFolha)

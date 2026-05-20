@@ -19,7 +19,7 @@ void removeFolha(struct nodo* x, int i) {
 }
 
 // encontra o predecessor da chave K 
-int32_t encontraPred(struct nodo* x, int i) {
+struct nodo* encontraPred(struct nodo* x, int i) {
   //filho a esquerda da chave
   struct nodo* atual = x->filhos[i];
 
@@ -28,12 +28,11 @@ int32_t encontraPred(struct nodo* x, int i) {
     atual = atual->filhos[atual->n]; //o ultimo ponteiro aponta para os maiores valores do nodo
   }
 
-  //predecessor é a ultima chave da folha
-  return atual->chaves[atual->n - 1];
+  return atual;
 }
 
 // encontra o sucessor da chave K 
-int32_t encontraSuc(struct nodo* x, int i) {
+struct nodo* encontraSuc(struct nodo* x, int i) {
   //filho a direita da chave
   struct nodo* atual = x->filhos[i + 1];
 
@@ -42,8 +41,7 @@ int32_t encontraSuc(struct nodo* x, int i) {
     atual = atual->filhos[0]; //o primeiro ponteiro de filho aponta para os menores valores
   }
 
-  // O sucessor é a primeira chave da folha
-  return atual->chaves[0];
+  return atual;
 }
 
 // ajusta raiz no caso dela ficar vaiza
