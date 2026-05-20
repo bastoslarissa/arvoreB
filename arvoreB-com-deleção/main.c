@@ -1,182 +1,132 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "arvoreB.h"
 
-/* -------------------- Funções auxiliares da main -------------------- */
+static void mostrarArvore(struct arvoreB *arvore) {
+  printf("\nÁrvore em largura:\n");
+  imprimirArvoreB(arvore);
 
-static void mostrarBusca(struct arvoreB* arvore, int32_t chave) {
-    int32_t idx = -1;
-    struct nodo* nodoEncontrado = buscarArvoreB(arvore, chave, &idx);
-
-    if (nodoEncontrado) {
-        printf("Busca %d: ENCONTRADA no índice %d do nodo [", chave, idx);
-
-        for (int i = 0; i < nodoEncontrado->n; i++) {
-            printf("%d%s",
-                   nodoEncontrado->chaves[i],
-                   i < nodoEncontrado->n - 1 ? " " : "");
-        }
-
-        printf("]\n");
-    } else {
-        printf("Busca %d: NÃO ENCONTRADA\n", chave);
-    }
+  printf("\nÁrvore em ordem:\n");
+  imprimirEmOrdem(arvore);
+  printf("\n");
 }
 
-static void removerEImprimir(struct arvoreB* arvore, int32_t chave) {
-    printf("\n--------------------------------------------------\n");
-    printf("Removendo %d...\n", chave);
-    printf("--------------------------------------------------\n");
+static void testarBusca(struct arvoreB *arvore, int32_t chave) {
+  int32_t indice = -1;
+  struct nodo *nodoEncontrado = buscarArvoreB(arvore, chave, &indice);
 
-    bool removeu = removerChaveArvoreB(arvore, chave);
+  if (nodoEncontrado != NULL) {
+    printf("Busca %d: ENCONTRADA no índice %d do nodo [", chave, indice);
 
-    if (removeu) {
-        printf("Chave %d removida com sucesso.\n", chave);
-    } else {
-        printf("Chave %d não foi encontrada.\n", chave);
+    for (int i = 0; i < nodoEncontrado->n; i++) {
+      printf("%d", nodoEncontrado->chaves[i]);
+
+      if (i < nodoEncontrado->n - 1) {
+        printf(" ");
+      }
     }
 
-    printf("\nÁrvore em largura:\n");
-    imprimirArvoreB(arvore);
-
-    printf("\nÁrvore em ordem:\n");
-    imprimirEmOrdem(arvore);
+    printf("]\n");
+  }
+  else {
+    printf("Busca %d: NÃO ENCONTRADA\n", chave);
+  }
 }
 
-/* ------------------------------ MAIN ------------------------------ */
+static void removerEImprimir(struct arvoreB *arvore, int32_t chave) {
+  printf("\n--------------------------------------------------\n");
+  printf("Removendo %d...\n", chave);
+  printf("\n--------------------------------------------------\n");
+
+  if (removerChaveArvoreB(arvore, chave)) {
+    printf("Chave %d removida com sucesso.\n", chave);
+  }
+  else {
+    printf("Chave %d não foi encontrada.\n", chave);
+  }
+
+  mostrarArvore(arvore);
+}
 
 int main(void) {
+  struct arvoreB *arvore = criarArvoreB(3);
 
-    printf("\n==================================================\n");
-    printf("TESTE GERAL - ÁRVORE B COM DELEÇÃO\n");
-    printf("==================================================\n");
+  int32_t chavesInsercao[] = {
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    11, 12, 13, 14, 15, 16, 17, 18,
+    19, 20, 21, 22, 23, 24, 25, 30
+  };
 
-    struct arvoreB* arvore = criarArvoreB(3);
+  int32_t buscasIniciais[] = {1, 10, 17, 25, 99};
 
-    /* ============================================================
-       TESTE 1: INSERÇÕES
-       ============================================================ */
+  int32_t remocoes[] = {
+    25, 12,
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    11, 13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24
+  };
 
-    printf("\n==================================================\n");
-    printf("TESTE 1 - INSERÇÕES\n");
-    printf("==================================================\n");
+  int32_t buscasFinais[] = {1, 12, 25, 999};
 
-    int32_t chavesInserir[] = {
-        10, 20, 5, 6, 12, 30, 7, 17,
-        3, 4, 2, 1, 8, 9, 11, 13,
-        14, 15, 16, 18, 19, 21, 22,
-        23, 24, 25
-    };
+  int qtdInsercoes = sizeof(chavesInsercao) / sizeof(chavesInsercao[0]);
+  int qtdBuscasIniciais = sizeof(buscasIniciais) / sizeof(buscasIniciais[0]);
+  int qtdRemocoes = sizeof(remocoes) / sizeof(remocoes[0]);
+  int qtdBuscasFinais = sizeof(buscasFinais) / sizeof(buscasFinais[0]);
 
-    int qtdInsercoes = sizeof(chavesInserir) / sizeof(chavesInserir[0]);
+  printf("==================================================\n");
+  printf("TESTE GERAL - ÁRVORE B COM DELEÇÃO\n");
+  printf("==================================================\n");
 
-    for (int i = 0; i < qtdInsercoes; i++) {
-        inserirArvoreB(arvore, chavesInserir[i]);
-    }
+  printf("\n==================================================\n");
+  printf("TESTE 1 - INSERÇÕES\n");
+  printf("==================================================\n");
 
-    printf("\nÁrvore após as inserções:\n");
-    imprimirArvoreB(arvore);
+  for (int i = 0; i < qtdInsercoes; i++) {
+    inserirArvoreB(arvore, chavesInsercao[i]);
+  }
 
-    printf("\nImpressão em ordem:\n");
-    imprimirEmOrdem(arvore);
+  printf("\nÁrvore após as inserções:\n");
+  imprimirArvoreB(arvore);
 
+  printf("\nImpressão em ordem:\n");
+  imprimirEmOrdem(arvore);
+  printf("\n");
 
-    /* ============================================================
-       TESTE 2: BUSCAS
-       ============================================================ */
+  printf("\n==================================================\n");
+  printf("TESTE 2 - BUSCAS\n");
+  printf("==================================================\n");
 
-    printf("\n==================================================\n");
-    printf("TESTE 2 - BUSCAS\n");
-    printf("==================================================\n");
+  for (int i = 0; i < qtdBuscasIniciais; i++) {
+    testarBusca(arvore, buscasIniciais[i]);
+  }
 
-    mostrarBusca(arvore, 1);
-    mostrarBusca(arvore, 10);
-    mostrarBusca(arvore, 17);
-    mostrarBusca(arvore, 25);
-    mostrarBusca(arvore, 99);
+  printf("\n==================================================\n");
+  printf("TESTE 3 - REMOÇÕES\n");
+  printf("==================================================\n");
 
+  for (int i = 0; i < qtdRemocoes; i++) {
+    removerEImprimir(arvore, remocoes[i]);
+  }
 
-    /* ============================================================
-       TESTE 3: REMOÇÃO DE CHAVE EM FOLHA
-       ============================================================ */
+  printf("\n==================================================\n");
+  printf("TESTE 4 - REMOÇÃO DE CHAVE INEXISTENTE\n");
+  printf("==================================================\n");
 
-    printf("\n==================================================\n");
-    printf("TESTE 3 - REMOÇÃO DE CHAVE EM FOLHA\n");
-    printf("==================================================\n");
+  removerEImprimir(arvore, 999);
 
-    removerEImprimir(arvore, 25);
+  printf("\n==================================================\n");
+  printf("TESTE 5 - BUSCAS APÓS REMOÇÕES\n");
+  printf("==================================================\n");
 
+  for (int i = 0; i < qtdBuscasFinais; i++) {
+    testarBusca(arvore, buscasFinais[i]);
+  }
 
-    /* ============================================================
-       TESTE 4: REMOÇÃO DE CHAVE INTERNA
-       Dependendo da estrutura, deve usar predecessor,
-       sucessor ou merge.
-       ============================================================ */
+  printf("\n==================================================\n");
+  printf("FIM DOS TESTES\n");
+  printf("==================================================\n");
 
-    printf("\n==================================================\n");
-    printf("TESTE 4 - REMOÇÃO DE CHAVE INTERNA\n");
-    printf("==================================================\n");
-
-    removerEImprimir(arvore, 12);
-
-
-    /* ============================================================
-       TESTE 5: REMOÇÕES SUCESSIVAS
-       Devem provocar redistribuições e merges.
-       ============================================================ */
-
-    printf("\n==================================================\n");
-    printf("TESTE 5 - REMOÇÕES SUCESSIVAS\n");
-    printf("==================================================\n");
-
-    int32_t chavesRemover[] = {
-        1, 2, 3, 4, 5, 6, 7, 8,
-        9, 10, 11, 13, 14, 15, 16,
-        17, 18, 19, 20, 21, 22, 23, 24
-    };
-
-    int qtdRemocoes = sizeof(chavesRemover) / sizeof(chavesRemover[0]);
-
-    for (int i = 0; i < qtdRemocoes; i++) {
-        removerEImprimir(arvore, chavesRemover[i]);
-    }
-
-
-    /* ============================================================
-       TESTE 6: REMOÇÃO DE CHAVE INEXISTENTE
-       ============================================================ */
-
-    printf("\n==================================================\n");
-    printf("TESTE 6 - REMOÇÃO DE CHAVE INEXISTENTE\n");
-    printf("==================================================\n");
-
-    removerEImprimir(arvore, 999);
-
-
-    /* ============================================================
-       TESTE 7: BUSCAS APÓS AS REMOÇÕES
-       ============================================================ */
-
-    printf("\n==================================================\n");
-    printf("TESTE 7 - BUSCAS APÓS REMOÇÕES\n");
-    printf("==================================================\n");
-
-    mostrarBusca(arvore, 1);
-    mostrarBusca(arvore, 12);
-    mostrarBusca(arvore, 25);
-    mostrarBusca(arvore, 999);
-
-
-    /* ============================================================
-       FINALIZAÇÃO
-       ============================================================ */
-
-    deletarArvore(arvore);
-
-    printf("\n==================================================\n");
-    printf("FIM DOS TESTES\n");
-    printf("==================================================\n");
-
-    return 0;
+  return 0;
 }

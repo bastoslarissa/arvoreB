@@ -82,13 +82,6 @@ void removeChaveNodo(struct nodo *x, int32_t chave) {
       x->chaves[j] = x->chaves[j+1] ;
     }
 
-    // se for nodo interno
-    if (!x->ehFolha) {
-      for (int j = i + 1; j < x->n; j++) {
-          x->filhos[j] = x->filhos[j+1];
-      }
-    }
-
     x->n--;
   }
 }

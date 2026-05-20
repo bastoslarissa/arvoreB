@@ -46,7 +46,7 @@ void merge (struct nodo *pai, struct nodo *filhoA, struct nodo *filhoB, int32_t 
   }
 
   // filhoA recebe os filhos de filhoB se forem nós internos
-  if (filhoA->ehFolha == false && filhoB->ehFolha == false) {
+  if (!filhoA->ehFolha) {
 
     for (int i = 0; i < filhoB->n + 1; i++) {
         filhoA->filhos[filhoA->n + 1 + i] = filhoB->filhos[i];  // filhoA recebe os filhos de filhoB
@@ -62,11 +62,13 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
   // encontra o irmão imediato com mais chaves 
   int indiceB = -1 ;
 
-  for (int j = 0; j <= pai->n; j++) {
-    if (j != i) {
-      if (indiceB == -1 || pai->filhos[j]->n > pai->filhos[indiceB]->n) {
-              indiceB = j; 
-      }
+  if (i > 0) {
+    indiceB = i - 1;
+  }
+
+  if (i < pai->n) {
+    if (indiceB == -1 || pai->filhos[i + 1]->n > pai->filhos[indiceB]->n) {
+      indiceB = i + 1;
     }
   }
 
@@ -84,11 +86,16 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
       // CORREÇÃO: Move também o PRIMEIRO FILHO de 'b' para o final do filho 'i'
       if (!pai->filhos[i]->ehFolha) {
           pai->filhos[i]->filhos[pai->filhos[i]->n + 1] = b->filhos[0];
+
+          for (int j = 0; j < b->n; j++) {
+            b->filhos[j] = b->filhos[j + 1];
+          }
       }
 
       pai->filhos[i]->n++;
       pai->chaves[i] = b->chaves[0];  // pai recebe a primeira chave de b
       removeChaveNodo(b, b->chaves[0]);   // ajusta b
+      ajustaFilhos(b, b->chaves[0]);
 
       return pai->filhos[i];
     }
@@ -128,8 +135,8 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
       prox = pai->filhos[i];
 
       removeChaveNodo(pai, pai->chaves[i]);
+      ajustaFilhos(pai, indiceB);
       excluiNodo(b);
-      //ajustaFilhos(pai, indiceB);
     }
     else {
       // b eh filho esquerdo
@@ -140,8 +147,8 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
       prox = b;
 
       removeChaveNodo(pai, pai->chaves[i - 1]);
+      ajustaFilhos(pai, i);     
       excluiNodo(filhoDireito);
-      //ajustaFilhos(pai, i);     
     }
 
     
@@ -208,10 +215,16 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
         struct nodo* filhoB = x->filhos[i + 1];
 
         merge(x, x->filhos[i], x->filhos[i + 1], x->chaves[i]);
-        removeChaveNodo(x, chave);
+        removeChaveNodo(x, x->chaves[i]);
+
+        ajustaFilhos(x, i + 1);
+
+        //debug
+        printf("filhoB = %p\n", (void*) filhoB);
+        printf("filhoB->filhos = %p\n", (void*) filhoB->filhos);
+        printf("filhoB->chaves = %p\n", (void*) filhoB->chaves);
 
         excluiNodo(filhoB);
-        //ajustaFilhos(x, i + 1);
 
         // se x era raiz e não tem mais chaves
         if (x->n < 1) {
