@@ -68,6 +68,55 @@ void ajustaRaiz(struct arvoreB* arvore) {
 
 }
 
+void removeChaveNodo(struct nodo *x, int32_t chave) {
+
+  int i = 0;
+
+  // procura chave
+  while (i < x->n && chave > x->chaves[i]) {
+    i++;
+  }
+
+  // se encontrou a chave
+  if (i < x->n && chave == x->chaves[i]) {
+    // desloca as chaves para esquerda
+    for (int j = i; j < x->n - 1; j++) {
+      x->chaves[j] = x->chaves[j+1] ;
+    }
+
+    // se for nodo interno
+    if (!x->ehFolha) {
+      for (int j = i + 1; j < x->n; j++) {
+          x->filhos[j] = x->filhos[j+1];
+      }
+    }
+
+    x->n--;
+  }
+}
+
+void excluiNodo(struct nodo *x) {
+
+  if (!x)
+    return;
+
+  // libera os filhos
+  free(x->filhos);
+
+  // libera as chaves
+  free(x->chaves);
+
+  // libera o nodo
+  free(x);
+  x = NULL;
+}
+
+void ajustaFilhos (struct nodo *x, int32_t i) {
+
+  for (int j = i; j < x->n + 1; j++) {
+    x->filhos[j] = x->filhos[j + 1];
+  }
+}
 
 //---------------------- Funções auxiliares (primeira parte do trabalho) -------------------------
 
