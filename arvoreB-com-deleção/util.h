@@ -29,6 +29,10 @@ void liberarArvoreB (struct nodo* x);
 struct nodo* encontraPred(struct nodo* x, int i);
 struct nodo* encontraSuc(struct nodo* x, int i);
 void removeFolha(struct nodo* x, int i);
+void ajustaRaiz(struct arvoreB* arvore);
+void removeChaveNodo(struct nodo *x, int32_t chave);
+void excluiNodo(struct nodo *x);
+void ajustaFilhos (struct nodo *x, int32_t i);
 
 
 //funções da fila
