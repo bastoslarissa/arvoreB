@@ -80,10 +80,14 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
     if (indiceB > i) {
       // pasa uma chave do pai para o filho i
       pai->filhos[i]->chaves[pai->filhos[i]->n] = pai->chaves[i];
+      
+      // CORREÇÃO: Move também o PRIMEIRO FILHO de 'b' para o final do filho 'i'
+      if (!pai->filhos[i]->ehFolha) {
+          pai->filhos[i]->filhos[pai->filhos[i]->n + 1] = b->filhos[0];
+      }
+
       pai->filhos[i]->n++;
-
       pai->chaves[i] = b->chaves[0];  // pai recebe a primeira chave de b
-
       removeChaveNodo(b, b->chaves[0]);   // ajusta b
 
       return pai->filhos[i];
@@ -93,6 +97,14 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
       // abre espaco no inicio do filho i
       for (int j = pai->filhos[i]->n; j > 0; j--) {
         pai->filhos[i]->chaves[j] = pai->filhos[i]->chaves[j - 1];
+      }
+
+      // CORREÇÃO: Abre espaço e move o ÚLTIMO FILHO de 'b' para o início do filho 'i'
+      if (!pai->filhos[i]->ehFolha) {
+        for (int j = pai->filhos[i]->n + 1; j > 0; j--) {
+            pai->filhos[i]->filhos[j] = pai->filhos[i]->filhos[j - 1];
+        }
+        pai->filhos[i]->filhos[0] = b->filhos[b->n];
       }
 
       // chave do pai desce para o início do filho i
@@ -117,17 +129,19 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
 
       removeChaveNodo(pai, pai->chaves[i]);
       excluiNodo(b);
-      ajustaFilhos(pai, indiceB);
+      //ajustaFilhos(pai, indiceB);
     }
     else {
       // b eh filho esquerdo
+      struct nodo* filhoDireito = pai->filhos[i];
+
       merge(pai, b, pai->filhos[i], pai->chaves[i - 1]);
 
       prox = b;
 
       removeChaveNodo(pai, pai->chaves[i - 1]);
-      excluiNodo(pai->filhos[i]);
-      ajustaFilhos(pai, i);     
+      excluiNodo(filhoDireito);
+      //ajustaFilhos(pai, i);     
     }
 
     
@@ -172,7 +186,7 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
 
         x->chaves[i] = pred_chave;
 
-        return removerChaveRec(arvore, pred, pred_chave);
+        return removerChaveRec(arvore, x->filhos[i], pred_chave);
       }
 
       // caso 2b: filho à direita possui pelo menos t chaves
@@ -182,7 +196,7 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
 
         x->chaves[i] = suc_chave;
 
-        return removerChaveRec(arvore, suc, suc_chave);
+        return removerChaveRec(arvore, x->filhos[i + 1], suc_chave);
       }
 
       // caso 2c: ambas as subárvores têm a quantidade mínima de chaves
@@ -190,11 +204,14 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
         x->filhos[i]->n == arvore->t_arvore - 1 &&
         x->filhos[i + 1]->n == arvore->t_arvore - 1
       ) {
+
+        struct nodo* filhoB = x->filhos[i + 1];
+
         merge(x, x->filhos[i], x->filhos[i + 1], x->chaves[i]);
         removeChaveNodo(x, chave);
 
-        excluiNodo(x->filhos[i + 1]);
-        ajustaFilhos(x, i + 1);
+        excluiNodo(filhoB);
+        //ajustaFilhos(x, i + 1);
 
         // se x era raiz e não tem mais chaves
         if (x->n < 1) {
