@@ -21,9 +21,7 @@ void imprimirArvoreB(struct arvoreB* arvore);
 void imprimirEmOrdem(struct arvoreB* arvore);
 struct nodo* buscarArvoreB(struct arvoreB* arvore, int32_t chave,
                           int32_t* idxEncontrado);
-bool removerChaveArvoreB(struct arvoreB* arvore, struct nodo* x, int32_t chave);
+bool removerChaveArvoreB(struct arvoreB* arvore, int32_t chave);
 void deletarArvore(struct arvoreB* arvore);
-void redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i);
-void merge (struct nodo *pai, struct nodo *filhoA, struct nodo *filhoB, int32_t chave);
 
 #endif
