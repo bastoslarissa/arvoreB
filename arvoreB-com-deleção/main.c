@@ -128,5 +128,8 @@ int main(void) {
   printf("FIM DOS TESTES\n");
   printf("==================================================\n");
 
-  return 0;
+  deletarArvore(arvore);
+
+    return 0;
+
 }
