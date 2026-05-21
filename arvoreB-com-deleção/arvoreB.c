@@ -33,7 +33,6 @@ void inserirArvoreB(struct arvoreB* arvore, int32_t chave) {
 }
 
 void merge (struct nodo *pai, struct nodo *filhoA, struct nodo *filhoB, int32_t chave) {
-
   if (!pai || !filhoA || !filhoB)
     return;
 
@@ -58,7 +57,6 @@ void merge (struct nodo *pai, struct nodo *filhoA, struct nodo *filhoB, int32_t 
 }
 
 struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i) {
-
   // encontra o irmão imediato com mais chaves 
   int indiceB = -1 ;
 
@@ -83,7 +81,6 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
       // pasa uma chave do pai para o filho i
       pai->filhos[i]->chaves[pai->filhos[i]->n] = pai->chaves[i];
       
-      // CORREÇÃO: Move também o PRIMEIRO FILHO de 'b' para o final do filho 'i'
       if (!pai->filhos[i]->ehFolha) {
           pai->filhos[i]->filhos[pai->filhos[i]->n + 1] = b->filhos[0];
 
@@ -106,7 +103,6 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
         pai->filhos[i]->chaves[j] = pai->filhos[i]->chaves[j - 1];
       }
 
-      // CORREÇÃO: Abre espaço e move o ÚLTIMO FILHO de 'b' para o início do filho 'i'
       if (!pai->filhos[i]->ehFolha) {
         for (int j = pai->filhos[i]->n + 1; j > 0; j--) {
             pai->filhos[i]->filhos[j] = pai->filhos[i]->filhos[j - 1];
@@ -165,7 +161,6 @@ struct nodo* redistribuicao (struct arvoreB* arvore, struct nodo* pai, int32_t i
 }
 
 bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
-
   int32_t i = 0;
 
   // percorre o nodo
@@ -218,12 +213,6 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
         removeChaveNodo(x, x->chaves[i]);
 
         ajustaFilhos(x, i + 1);
-
-        //debug
-        printf("filhoB = %p\n", (void*) filhoB);
-        printf("filhoB->filhos = %p\n", (void*) filhoB->filhos);
-        printf("filhoB->chaves = %p\n", (void*) filhoB->chaves);
-
         excluiNodo(filhoB);
 
         // se x era raiz e não tem mais chaves
@@ -256,9 +245,7 @@ bool removerChaveRec(struct arvoreB* arvore, struct nodo *x, int32_t chave) {
 }
 
 //remove uma chave, se foi removida, retorna verdadeiro. Caso contrário, retorna falso
-//caso 1 é tratado dentro dessa função (caso o nodo excluido esta em uma folha)
 bool removerChaveArvoreB(struct arvoreB* arvore, int32_t chave) {
-  
   if (!arvore)
     return false;
 
