@@ -1,5 +1,5 @@
 GRR= 20231947_20235088
-nomePrograma= prova1_$(GRR)
+nomePrograma= prova2_$(GRR)
 
 # flags de compilação
 CFLAGS = -Wall -Wextra -Werror -g -std=c23 -Wpedantic
